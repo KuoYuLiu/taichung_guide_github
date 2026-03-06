@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>台中舊城智慧導覽</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #007AFF; --bg-color: #F2F2F7;
+            --card-bg: #FFFFFF; --text-main: #1C1C1E; --text-muted: #8E8E93;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); overflow-x: hidden; }
+
+        .header {
+            position: fixed; top: 0; width: 100%; background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px); padding: 15px 20px; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+        }
+        .header h1 { font-size: 18px; font-weight: 600; }
+        
+        .test-toggle { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+        .switch { position: relative; display: inline-block; width: 34px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(14px); }
+
+        #camera-wrapper {
+            position: relative; width: 100%; height: 60vh; margin-top: 55px;
+            background-color: #000; overflow: hidden;
+            border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
+        }
+        #webcam-container canvas { width: 100% !important; height: 100% !important; object-fit: cover; }
+        
+        .viewfinder {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 75%; height: 60%; border: 2px solid rgba(255, 255, 255, 0.8); border-radius: 15px;
+            box-shadow: 0 0 0 2000px rgba(0, 0, 0, 0.4); pointer-events: none; z-index: 10;
+        }
+        .viewfinder::after {
+            content: "請將建築物置於框內"; position: absolute; bottom: -30px; left: 0; width: 100%;
+            text-align: center; color: white; font-size: 14px; text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+        }
+
+        .controls { position: absolute; bottom: 20px; left: 0; width: 100%; display: flex; justify-content: center; z-index: 20; }
+        .shutter-btn {
+            width: 70px; height: 70px; border-radius: 50%; background-color: rgba(255,255,255,0.3); border: 3px solid white;
+            display: flex; justify-content: center; align-items: center; cursor: pointer; display: none;
+        }
+        .shutter-inner { width: 54px; height: 54px; border-radius: 50%; background-color: white; }
+        .start-btn { padding: 12px 24px; border-radius: 25px; background: var(--primary-color); color: white; border: none; font-size: 16px; font-weight: 600; }
+
+        #status-bar { text-align: center; padding: 15px; font-size: 15px; color: var(--text-muted); min-height: 50px; font-weight: 500; }
+
+        .loader {
+            display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(0,122,255,0.3); border-radius: 50%;
+            border-top-color: var(--primary-color); animation: spin 1s ease-in-out infinite; vertical-align: middle; margin-right: 8px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #result-panel { padding: 0 20px 30px; display: none; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .card { background: var(--card-bg); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.05); }
+        .card h3 { font-size: 18px; margin-bottom: 8px; color: var(--text-main); }
+        .card p { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+        .landmark-badge { display: inline-block; padding: 4px 10px; background: #E5F1FF; color: var(--primary-color); border-radius: 12px; font-size: 12px; font-weight: bold; margin-bottom: 10px;}
+
+        .shop-item { padding: 12px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .shop-item:last-child { border-bottom: none; }
+        .shop-info h4 { font-size: 16px; margin-bottom: 4px; }
+        .shop-info p { font-size: 13px; margin: 2px 0; }
+        
+        .nav-btn {
+            background: #34C759; color: white; width: 40px; height: 40px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; text-decoration: none;
+        }
+
+        .retry-btn { width: 100%; padding: 15px; background: #E5E5EA; color: var(--text-main); border: none; border-radius: 15px; font-size: 16px; font-weight: bold; margin-top: 10px; margin-bottom: 30px; cursor: pointer; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+</head>
+<body>
+
+    <div class="header">
+        <h1><i class="fa-solid fa-map-location-dot" style="color:var(--primary-color);"></i> 舊城 AI 導覽</h1>
+        <div class="test-toggle">
+            模擬定位
+            <label class="switch"><input type="checkbox" id="testModeCheckbox" checked><span class="slider"></span></label>
+        </div>
+    </div>
+
+    <div id="camera-wrapper">
+        <div id="viewfinder" class="viewfinder" style="display:none;"></div>
+        <div id="webcam-container"></div>
+        <div class="controls">
+            <button class="start-btn" id="start-btn" onclick="init()"><i class="fa-solid fa-camera"></i> 啟動相機</button>
+            <div class="shutter-btn" id="snap-btn" onclick="takeSnapshotAndPredict()"><div class="shutter-inner"></div></div>
+        </div>
+    </div>
+
+    <div id="status-bar">準備就緒，請啟動相機</div>
+
+    <div id="result-panel">
+        <div id="landmark-info"></div>
+        <div id="souvenir-info"></div>
+        <button class="retry-btn" onclick="restartCamera()"><i class="fa-solid fa-rotate-right"></i> 掃描下一個景點</button>
+    </div>
+
+    <script>
+        const MODEL_URL = "./model/"; 
+        let model, webcam, maxPredictions;
+        let isCameraRunning = false;
+
+        // 【重要】確保這裡的英文與 Teachable Machine 訓練時的名稱完全一致
+        const classToIdMap = {
+            "miyahara": "landmark_001",
+            "old_station": "landmark_002",
+            "prefectural_...": "landmark_003",
+            "fourth_credi...": "landmark_004"
+        };
+
+        // 1. 初始化相機與模型
+        async function init() {
+            document.getElementById("status-bar").innerHTML = '<div class="loader"></div> 載入 AI 視覺引擎中...';
+            document.getElementById("start-btn").style.display = "none";
+
+            try {
+                if (!model) {
+                    model = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
+                    maxPredictions = model.getTotalClasses();
+                    console.log("模型載入成功！");
+                }
+
+                webcam = new tmImage.Webcam(400, 400, false); 
+                await webcam.setup({ facingMode: "environment" }); 
+                await webcam.play();
+                
+                document.getElementById("webcam-container").innerHTML = "";
+                document.getElementById("webcam-container").appendChild(webcam.canvas);
+                
+                isCameraRunning = true;
+                window.requestAnimationFrame(updateWebcam);
+
+                document.getElementById("viewfinder").style.display = "block";
+                document.getElementById("status-bar").innerText = "請將景點置於觀景窗內，按下快門";
+                document.getElementById("snap-btn").style.display = "flex";
+            } catch (err) {
+                console.error("相機或模型初始化失敗:", err);
+                document.getElementById("status-bar").innerHTML = '<i class="fa-solid fa-circle-exclamation" style="color:red;"></i> 無法啟動相機或找不到模型檔案，請確認 /model 資料夾路徑。';
+            }
+        }
+
+        function updateWebcam() {
+            if (isCameraRunning) { webcam.update(); window.requestAnimationFrame(updateWebcam); }
+        }
+
+        // 2. 拍照並辨識
+        async function takeSnapshotAndPredict() {
+            isCameraRunning = false; webcam.pause(); 
+            document.getElementById("snap-btn").style.display = "none";
+            document.getElementById("viewfinder").style.display = "none";
+            document.getElementById("status-bar").innerHTML = '<div class="loader"></div> 分析建築特徵中...';
+            document.getElementById("result-panel").style.display = "none"; // 先隱藏結果面板
+
+            try {
+                const prediction = await model.predict(webcam.canvas);
+                let bestMatch = prediction.reduce((max, p) => p.probability > max.probability ? p : max, prediction[0]);
+                console.log("AI 判斷結果:", bestMatch.className, "機率:", bestMatch.probability);
+
+                if (bestMatch.probability > 0.80 && bestMatch.className !== "nothing") {
+                    document.getElementById("status-bar").innerHTML = `<i class="fa-solid fa-circle-check" style="color:#34C759;"></i> 辨識成功！(${bestMatch.className})`;
+                    
+                    let landmarkId = classToIdMap[bestMatch.className];
+                    document.getElementById("result-panel").style.display = "block"; // 顯示結果面板
+                    
+                    if (landmarkId) {
+                        fetchLandmarkInfo(landmarkId);
+                    } else {
+                        document.getElementById('landmark-info').innerHTML = `<div class="card"><p style="color:red;">找不到 ${bestMatch.className} 對應的 ID，請檢查 classToIdMap 設定。</p></div>`;
+                    }
+                } else {
+                    document.getElementById("status-bar").innerHTML = `<i class="fa-solid fa-circle-exclamation" style="color:#FF3B30;"></i> 辨識失敗或認為是背景，請重試。`;
+                    document.getElementById("result-panel").style.display = "block";
+                    document.getElementById("landmark-info").innerHTML = "";
+                    document.getElementById("souvenir-info").innerHTML = "";
+                }
+            } catch (error) {
+                console.error("預測時發生錯誤:", error);
+                document.getElementById("status-bar").innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:#FF3B30;"></i> 分析影像時發生錯誤。`;
+            }
+        }
+
+        function restartCamera() {
+            document.getElementById("result-panel").style.display = "none";
+            webcam.play(); isCameraRunning = true; window.requestAnimationFrame(updateWebcam);
+            document.getElementById("viewfinder").style.display = "block";
+            document.getElementById("status-bar").innerText = "請將景點置於觀景窗內，按下快門";
+            document.getElementById("snap-btn").style.display = "flex";
+        }
+
+        // 3. 讀取景點 JSON
+        function fetchLandmarkInfo(landmarkId) {
+            document.getElementById('landmark-info').innerHTML = '<div style="text-align:center; padding: 20px;"><div class="loader"></div> 讀取歷史檔案中...</div>';
+            console.log("正在讀取景點:", landmarkId);
+            
+            fetch('./data/landmarks.json')
+            .then(res => {
+                if (!res.ok) throw new Error('找不到 landmarks.json 檔案');
+                return res.json();
+            })
+            .then(dataList => {
+                const data = dataList.find(item => item.id === landmarkId);
+                if (data) {
+                    document.getElementById('landmark-info').innerHTML = `
+                        <div class="card">
+                            <span class="landmark-badge">${data.type}</span>
+                            <h3><i class="fa-solid fa-building-columns"></i> ${data.name}</h3>
+                            <p>${data.history_intro}</p>
+                        </div>`;
+                    getUserLocation(data);
+                } else {
+                    throw new Error(`在 JSON 中找不到 ID: ${landmarkId}`);
+                }
+            })
+            .catch(err => {
+                console.error("景點讀取錯誤:", err);
+                document.getElementById('landmark-info').innerHTML = `<div class="card"><p style="color:#FF3B30;"><i class="fa-solid fa-bug"></i> 讀取景點失敗：${err.message}</p></div>`;
+            });
+        }
+
+        // 4. 計算距離公式 (Haversine)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; 
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+        }
+
+        // 5. 取得定位與推薦伴手禮
+        function getUserLocation(landmarkData) {
+            const isTestMode = document.getElementById('testModeCheckbox').checked;
+            document.getElementById('souvenir-info').innerHTML = '<div style="text-align:center; padding: 20px;"><div class="loader"></div> 掃描周邊伴手禮中...</div>';
+
+            if (isTestMode && landmarkData) {
+                console.log("測試模式啟動，使用景點座標:", landmarkData.latitude, landmarkData.longitude);
+                setTimeout(() => sendPositionToBackend({ coords: { latitude: landmarkData.latitude, longitude: landmarkData.longitude } }), 800);
+            } else {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(sendPositionToBackend, (err) => {
+                        console.error("定位失敗:", err);
+                        document.getElementById('souvenir-info').innerHTML = `<p style="color:#FF3B30; text-align:center;">定位失敗，請確認已開啟 GPS 權限。</p>`;
+                    });
+                }
+            }
+        }
+
+        function sendPositionToBackend(position) {
+            const userLat = position.coords.latitude;
+            const userLon = position.coords.longitude;
+            console.log("準備計算伴手禮距離，起點:", userLat, userLon);
+
+            fetch('./data/souvenirs.json')
+            .then(res => {
+                if (!res.ok) throw new Error('找不到 souvenirs.json 檔案');
+                return res.json();
+            })
+            .then(shops => {
+                let results = [];
+                shops.forEach(shop => {
+                    const dist = calculateDistance(userLat, userLon, shop.latitude, shop.longitude);
+                    if (dist <= 1.5) { // 找 1.5 公里內的店
+                        results.push({ ...shop, distance_km: dist.toFixed(2) });
+                    }
+                });
+
+                results.sort((a, b) => parseFloat(a.distance_km) - parseFloat(b.distance_km));
+
+                if(results.length === 0) {
+                    document.getElementById('souvenir-info').innerHTML = `<div class="card"><p>附近 1.5 公里內沒有推薦的伴手禮店。</p></div>`;
+                    return;
+                }
+
+                let html = `<div class="card"><h3><i class="fa-solid fa-gift" style="color: #FF9500;"></i> 附近必買推薦</h3>`;
+                results.forEach(shop => {
+                    const mapUrl = `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLon}&destination=${shop.latitude},${shop.longitude}`;
+                    html += `
+                        <div class="shop-item">
+                            <div class="shop-info">
+                                <h4>${shop.name}</h4>
+                                <p style="color: var(--primary-color); font-weight:bold;">${shop.product}</p>
+                                <p><i class="fa-solid fa-person-walking"></i> 距離約 ${shop.distance_km} 公里</p>
+                            </div>
+                            <a href="${mapUrl}" target="_blank" class="nav-btn"><i class="fa-solid fa-location-arrow"></i></a>
+                        </div>`;
+                });
+                html += `</div>`;
+                document.getElementById('souvenir-info').innerHTML = html;
+            })
+            .catch(err => {
+                console.error("伴手禮讀取錯誤:", err);
+                document.getElementById('souvenir-info').innerHTML = `<p style="color:#FF3B30; text-align:center;"><i class="fa-solid fa-wifi"></i> 讀取伴手禮資料失敗：${err.message}</p>`;
+            });
+        }
+    </script>
+</body>
+</html>
