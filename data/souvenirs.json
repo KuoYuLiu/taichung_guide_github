@@ -1,38 +1,30 @@
 [
   {
     "id": "shop_001",
-    "name": "太陽堂老店 (自由路二段)",
-    "product": "傳統麥芽太陽餅",
     "latitude": 24.141154,
     "longitude": 120.681155,
-    "open_hours": "08:00 - 22:00",
-    "description": "台中最具代表性的太陽餅老店之一，堅持手工揉製多層次酥皮，包裹甜而不膩的純麥芽糖內餡。店內還保有藝術家顏水龍創作的向日葵馬賽克壁畫，是許多老台中人的共同記憶。"
+    "name_zh": "太陽堂老店", "name_en": "Taiyangtang Bakery", "name_ja": "太陽堂老店", "name_ko": "타이양탕 노점",
+    "product_zh": "傳統麥芽太陽餅", "product_en": "Traditional Suncake", "product_ja": "伝統的な太陽餅（サンケーキ）", "product_ko": "전통 타이양빙(태양병)"
   },
   {
     "id": "shop_002",
-    "name": "陳允寶泉 (自由路總店)",
-    "product": "御丹波、小月餅",
     "latitude": 24.141444,
     "longitude": 120.681321,
-    "open_hours": "09:00 - 21:30",
-    "description": "創立於1908年，結合台式糕餅與日式和菓子的精髓。其招牌「御丹波」曾榮獲日本和菓子最高榮譽的「天皇賞」，紅豆泥與乳酪的結合非常獨特，是送禮的高質感選擇。"
+    "name_zh": "陳允寶泉", "name_en": "Chen Yun Pao Chuan", "name_ja": "陳允宝泉", "name_ko": "천윈바오취안",
+    "product_zh": "御丹波、小月餅", "product_en": "Yudanbo & Mooncake", "product_ja": "御丹波、小月餅", "product_ko": "위단보, 소월병"
   },
   {
     "id": "shop_003",
-    "name": "一福堂老店 (中山路)",
-    "product": "檸檬餅 (檸檬蛋糕)",
     "latitude": 24.139611,
     "longitude": 120.683100,
-    "open_hours": "09:00 - 22:00",
-    "description": "創立於日治昭和三年，以西式風味的「檸檬餅」聞名全台。鬆軟的微酸蛋糕體外層裹著帶有淡淡檸檬香的白巧克力，是早期台灣社會極為時髦的高級甜點。"
+    "name_zh": "一福堂老店", "name_en": "Yi Fu Tang", "name_ja": "一福堂老店", "name_ko": "이푸탕 노점",
+    "product_zh": "檸檬餅 (檸檬蛋糕)", "product_en": "Lemon Cake", "product_ja": "レモンケーキ", "product_ko": "레몬 케이크"
   },
   {
     "id": "shop_004",
-    "name": "坂神本舖長崎蛋糕",
-    "product": "長崎蛋糕 (Castella)",
     "latitude": 24.140833,
     "longitude": 120.680556,
-    "open_hours": "09:00 - 19:00 (週一公休)",
-    "description": "台中超級排隊名店，堅持不加一滴水與蜂蜜，僅用新鮮雞蛋、糖、麵粉與麥芽糖烘焙而成。剛出爐時香氣四溢，口感扎實且充滿蛋香，閃亮的金色包裝是其一大特色。"
+    "name_zh": "坂神本舖長崎蛋糕", "name_en": "Sakamoto Castella", "name_ja": "坂神本舗カステラ", "name_ko": "사카모토 카스테라",
+    "product_zh": "長崎蛋糕", "product_en": "Castella Cake", "product_ja": "長崎カステラ", "product_ko": "나가사키 카스테라"
   }
 ]
