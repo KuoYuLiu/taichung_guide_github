@@ -1,38 +1,46 @@
 [
   {
     "id": "landmark_001",
-    "name": "宮原眼科",
-    "type": "歷史建築/文創",
     "latitude": 24.137833,
     "longitude": 120.683555,
-    "history_intro": "建於1927年，原為日籍眼科醫師宮原武熊所開的診所，也是日治時期臺中規模最大的眼科診所。戰後曾成為臺中衛生院，歷經921地震與颱風摧殘後成為廢墟。後由在地知名糕餅業者「日出」團隊買下，保留紅磚牆與舊牌樓，內部則改建為宛如霍格華茲般的華麗圖書館風格，是台中舊城活化的最成功案例。",
-    "ai_features": ["紅磚外牆", "拱廊", "宮原眼科字樣牌樓"]
+    "type_zh": "歷史建築/文創", "type_en": "Historic / Creative", "type_ja": "歴史建築 / 文化創造", "type_ko": "역사 건축 / 문화 창조",
+    "name_zh": "宮原眼科", "name_en": "Miyahara", "name_ja": "宮原眼科", "name_ko": "미야하라 안과",
+    "history_zh": "建於1927年，原為日籍眼科醫師宮原武熊所開的診所。現由在地知名糕餅業者保留紅磚牆與舊牌樓，內部改建為宛如霍格華茲般的華麗圖書館風格，是台中舊城活化的最成功案例。",
+    "history_en": "Built in 1927, originally an eye clinic. Now successfully revitalized by a local pastry brand, retaining its red brick exterior while transforming the interior into a magical, Hogwarts-style library.",
+    "history_ja": "1927年に建てられた元眼科診療所。現在は地元の菓子メーカーによって赤レンガの壁を残しつつ、内部はホグワーツ魔法魔術学校のような華麗な図書館風に改装され、旧市街活性化の成功例となっています。",
+    "history_ko": "1927년에 지어진 옛 안과 병원. 현재는 지역 유명 제과 업체가 붉은 벽돌 외관을 보존한 채, 내부는 호그와트 마법 학교 같은 화려한 도서관 스타일로 개조하여 구도심 활성화의 성공적인 사례가 되었습니다."
   },
   {
     "id": "landmark_002",
-    "name": "臺中車站 (舊站)",
-    "type": "國定古蹟",
     "latitude": 24.136944,
     "longitude": 120.684722,
-    "history_intro": "建於1917年（大正6年），屬於後期文藝復興風格的紅磚建築。最引人注目的特徵是中央高聳的鐘塔，以及仿西方古典樣式的柱子與山牆。它見證了台灣鐵路交通的發展與台中市的繁華起落，目前已轉型為鐵道文化園區。",
-    "ai_features": ["紅磚牆體", "中央鐘塔", "白色洗石子環帶"]
+    "type_zh": "國定古蹟", "type_en": "National Monument", "type_ja": "国指定史跡", "type_ko": "국가지정 고적",
+    "name_zh": "臺中車站 (舊站)", "name_en": "Old Taichung Station", "name_ja": "旧台中駅", "name_ko": "타이중 구역사",
+    "history_zh": "建於1917年，屬於後期文藝復興風格的紅磚建築。最引人注目的特徵是中央高聳的鐘塔，見證了台灣鐵路交通的發展與台中市的繁華起落。",
+    "history_en": "Built in 1917, this red-brick building features late Renaissance style. Its prominent central clock tower has witnessed the development of Taiwan's railway and Taichung City.",
+    "history_ja": "1917年に建てられた後期ルネサンス様式の赤レンガ建築。中央にそびえる時計塔が特徴で、台湾の鉄道と台中市の発展を見守ってきました。",
+    "history_ko": "1917년에 지어진 후기 르네상스 스타일의 붉은 벽돌 건물. 중앙에 우뚝 솟은 시계탑이 특징이며, 대만 철도와 타이중시의 발전을 지켜본 역사적인 곳입니다."
   },
   {
     "id": "landmark_003",
-    "name": "臺中州廳",
-    "type": "國定古蹟",
     "latitude": 24.138556,
     "longitude": 120.678472,
-    "history_intro": "建於1913年，由知名日籍建築師森山松之助設計（亦為台灣總督府設計者）。建築採法國馬薩風格，具有華麗的曼薩爾式屋頂與老虎窗。過去是中部地區的最高行政機關，戰後成為台中市政府辦公處，是台中市「小京都」都市計畫的核心地標。",
-    "ai_features": ["白色外牆", "馬薩式屋頂", "多立克式柱廊"]
+    "type_zh": "國定古蹟", "type_en": "National Monument", "type_ja": "国指定史跡", "type_ko": "국가지정 고적",
+    "name_zh": "臺中州廳", "name_en": "Taichung Prefectural Hall", "name_ja": "台中州庁", "name_ko": "타이중 주청",
+    "history_zh": "建於1913年，由知名日籍建築師森山松之助設計。建築採法國馬薩風格，過去是中部地區的最高行政機關，為台中市「小京都」都市計畫的核心地標。",
+    "history_en": "Built in 1913, designed by Japanese architect Matsunosuke Moriyama. Featuring a French Mansard style, it was the highest administrative center in central Taiwan.",
+    "history_ja": "1913年、日本人建築家・森山松之助の設計により建設。フランスのマンサード屋根が特徴で、かつては中部地方の最高行政機関でした。",
+    "history_ko": "1913년 일본인 건축가 모리야마 마츠노스케가 설계. 프랑스 망사르 지붕이 특징이며, 과거 중부 지역의 최고 행정 기관이었습니다."
   },
   {
     "id": "landmark_004",
-    "name": "第四信用合作社",
-    "type": "歷史建築/文創",
     "latitude": 24.138515,
     "longitude": 120.682200,
-    "history_intro": "建於1966年，保留了早期金庫的特色與粗獷的鋼筋水泥外觀。與宮原眼科同為「日出」集團的活化建案，內部刻意保留了金庫門、復古金屬管線與水泥粗胚，展現工業風與懷舊元素的碰撞，目前主要販售冰淇淋與台式小點。",
-    "ai_features": ["水泥粗胚外觀", "巨大金庫門", "復古霓虹燈招牌"]
+    "type_zh": "歷史建築/文創", "type_en": "Historic / Creative", "type_ja": "歴史建築 / 文化創造", "type_ko": "역사 건축 / 문화 창조",
+    "name_zh": "第四信用合作社", "name_en": "Fourth Credit Union", "name_ja": "第四信用合作社", "name_ko": "제4신용합작사",
+    "history_zh": "建於1966年，保留了早期金庫的特色與粗獷的鋼筋水泥外觀。內部刻意保留金庫門與復古元素，展現工業風與懷舊元素的碰撞，目前主要販售冰淇淋與甜點。",
+    "history_en": "Built in 1966, retaining the rough concrete exterior and original bank vault features. It beautifully contrasts industrial style with nostalgic elements, currently selling popular ice cream.",
+    "history_ja": "1966年建設。かつての金庫室の特徴と荒々しいコンクリートの外観を残しています。工業的デザインとレトロな要素が融合し、現在は人気のアイスクリーム店として賑わっています。",
+    "history_ko": "1966년 건설. 초기 금고의 특징과 거친 콘크리트 외관을 유지하고 있습니다. 인더스트리얼 디자인과 레트로 요소가 결합되어 현재는 인기 있는 아이스크림 매장으로 운영됩니다."
   }
 ]
